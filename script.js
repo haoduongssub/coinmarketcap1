@@ -10,13 +10,13 @@ import {
 // const Chart from "https://cdn.jsdelivr.net/npm/chart.js" // Removed import to use window.Chart
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCYaTDe2ucxQihyDieKOONA0QsDc7IE-OM",
-  authDomain: "coinmarketcap-f6af1.firebaseapp.com",
-  projectId: "coinmarketcap-f6af1",
-  storageBucket: "coinmarketcap-f6af1.firebasestorage.app",
-  messagingSenderId: "768632391540",
-  appId: "1:768632391540:web:63ed4d31b938dc12534e21",
-  measurementId: "G-9ZZFDWN1NF",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
 const app = initializeApp(firebaseConfig)
