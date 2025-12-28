@@ -17,6 +17,13 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyCYaTDe2ucxQihyDieKOONA0QsDc7IE-OM",
+  authDomain: "coinmarketcap-f6af1.firebaseapp.com",
+  projectId: "coinmarketcap-f6af1",
+  storageBucket: "coinmarketcap-f6af1.firebasestorage.app",
+  messagingSenderId: "768632391540",
+  appId: "1:768632391540:web:63ed4d31b938dc12534e21",
+  measurementId: "G-9ZZFDWN1NF",
 }
 
 const app = initializeApp(firebaseConfig)
