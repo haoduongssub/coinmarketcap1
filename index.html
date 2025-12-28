@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoPrice - Bản sao CoinMarketCap</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome cho icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="top-nav">
+            <div class="container">
+                <div class="market-stats">
+                    <span>Cryptos: <span class="blue-text" id="global-cryptos">...</span></span>
+                    <span>Exchanges: <span class="blue-text" id="global-exchanges">...</span></span>
+                    <span>Market Cap: <span class="blue-text" id="global-market-cap">...</span></span>
+                    <span>24h Vol: <span class="blue-text" id="global-vol">...</span></span>
+                </div>
+                <div class="user-actions" id="user-actions">
+                    <button class="login-btn" id="open-login">Log In</button>
+                    <button class="signup-btn" id="open-signup">Sign Up</button>
+                </div>
+                <!-- added logged-in state container -->
+                <div class="user-profile hidden" id="user-profile">
+                    <span id="username-display"></span>
+                    <button class="logout-btn" id="logout-btn">Log Out</button>
+                </div>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="container">
+                <div class="logo">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>CoinMarketClone</span>
+                </div>
+                <ul class="nav-links">
+                    <li id="nav-crypto" class="active">Cryptocurrencies</li>
+                    <li id="nav-exchanges">Exchanges</li>
+                    <li id="nav-community">Community</li>
+                    <li id="nav-products">Products</li>
+                </ul>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search">
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Home / Cryptocurrencies View -->
+        <div id="view-crypto">
+            <section class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Market Cap <i class="fa-solid fa-chevron-right"></i></h3>
+                    </div>
+                    <div class="price-val">$2.97T <span class="up"><i class="fa-solid fa-caret-up"></i> 0.66%</span></div>
+                    <div class="chart-wrapper">
+                        <canvas id="market-cap-chart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>CMC20 <i class="fa-solid fa-chevron-right"></i></h3>
+                    </div>
+                    <div class="price-val">$184.43 <span class="up"><i class="fa-solid fa-caret-up"></i> 0.68%</span></div>
+                    <div class="chart-wrapper">
+                        <canvas id="cmc20-chart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Fear & Greed Index <i class="fa-solid fa-chevron-right"></i></h3>
+                    <div class="gauge-wrapper">
+                        <canvas id="fear-greed-gauge"></canvas>
+                        <div class="gauge-center">
+                            <span id="fng-value">29</span>
+                            <span id="fng-label">Fear</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Altcoin Season <i class="fa-solid fa-chevron-right"></i></h3>
+                    <div class="season-val">16 <small>/ 100</small></div>
+                    <div class="season-sub">Bitcoin <span class="right">Altcoin</span></div>
+                    <div class="season-slider">
+                        <div class="slider-dot" style="left: 16%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Crypto RSI <i class="fa-solid fa-chevron-right"></i></h3>
+                    <div class="price-val">55.84</div>
+                    <div class="rsi-labels"><span>Oversold</span> <span>Overbought</span></div>
+                    <div class="rsi-scale">
+                        <div class="rsi-dot" style="left: 55.84%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="narrative-pills">
+                <button class="pill-btn"><i class="fa-solid fa-fire"></i> Which sectors led market volumes?</button>
+                <button class="pill-btn"><i class="fa-solid fa-chart-line"></i> Why is the market up today?</button>
+                <button class="pill-btn"><i class="fa-solid fa-shuffle"></i> Are altcoins outperforming Bitcoin?</button>
+                <button class="pill-btn"><i class="fa-solid fa-comment-dots"></i> What are the trending narratives?</button>
+                <button class="pill-btn"><i class="fa-solid fa-arrow-trend-up"></i> What cryptos are showing bullish momentum?</button>
+            </section>
+
+            <section class="table-container">
+                <div class="table-header">
+                    <div class="tabs" id="crypto-tabs">
+                        <button class="tab-btn active" data-tab="top">Top</button>
+                        <button class="tab-btn" data-tab="trending">Trending</button>
+                        <button class="tab-btn" data-tab="new">New</button>
+                    </div>
+                    <div class="filters">
+                        <button class="filter-btn"><i class="fa-solid fa-filter"></i> Filters</button>
+                    </div>
+                </div>
+                <table id="crypto-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>24h %</th>
+                            <th>7d %</th>
+                            <th>Market Cap</th>
+                            <th>Volume(24h)</th>
+                            <th>Circulating Supply</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crypto-body">
+                        <!-- Skeleton loader will be inserted here -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- Exchanges View -->
+        <div id="view-exchanges" class="hidden">
+            <h1 class="view-title">Top Crypto Exchanges</h1>
+            <section class="table-container">
+                <table id="exchange-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Exchange</th>
+                            <th>Trust Score</th>
+                            <th>24h Volume (Normalized)</th>
+                            <th>24h Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exchange-body"></tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- Community View -->
+        <div id="view-community" class="hidden">
+            <div class="community-layout">
+                <div class="feed-container">
+                    <div class="post-box">
+                        <div class="post-box-header">
+                            <img src="https://avatar.vercel.sh/user" class="avatar" alt="User">
+                            <textarea placeholder="What is happening in the market?"></textarea>
+                        </div>
+                        <div class="post-box-footer">
+                            <div class="sentiment-btns">
+                                <button class="bull-btn"><i class="fa-solid fa-arrow-trend-up"></i> Bullish</button>
+                                <button class="bear-btn"><i class="fa-solid fa-arrow-trend-down"></i> Bearish</button>
+                            </div>
+                            <button class="post-btn">Post</button>
+                        </div>
+                    </div>
+                    <div id="community-feed">
+                        <!-- Posts chèn bởi JS -->
+                    </div>
+                </div>
+                <div class="community-sidebar">
+                    <h3>Trending Topics</h3>
+                    <ul class="trending-list">
+                        <li>#Bitcoin <span class="blue-text">Trending</span></li>
+                        <li>#Solana <span class="blue-text">Hot</span></li>
+                        <li>#Ethereum</li>
+                        <li>#ETF</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- News / Products View -->
+        <div id="view-news" class="hidden">
+            <h1 class="view-title">Crypto News</h1>
+            <div id="news-grid" class="news-grid">
+                <!-- News chèn bởi JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- added Auth Modals -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            
+            <div id="login-form-container">
+                <h2>Log In</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" required placeholder="name@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Log In</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <span id="switch-to-signup">Sign Up</span></p>
+            </div>
+
+            <div id="signup-form-container" class="hidden">
+                <h2>Create an Account</h2>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="signup-name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signup-email" required placeholder="name@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signup-password" required placeholder="Create password">
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Sign Up</button>
+                </form>
+                <p class="auth-switch">Already have an account? <span id="switch-to-login">Log In</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
