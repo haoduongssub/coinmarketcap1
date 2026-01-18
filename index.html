@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoPrice - Bản sao CoinMarketCap</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome cho icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Thêm thư viện Chart.js để vẽ biểu đồ -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="dark-theme">
@@ -22,6 +24,7 @@
                     <button class="login-btn" id="open-login">Log In</button>
                     <button class="signup-btn" id="open-signup">Sign Up</button>
                 </div>
+                <!-- added logged-in state container -->
                 <div class="user-profile hidden" id="user-profile">
                     <span id="username-display"></span>
                     <button class="logout-btn" id="logout-btn">Log Out</button>
@@ -32,14 +35,13 @@
             <div class="container">
                 <div class="logo">
                     <i class="fa-solid fa-coins"></i>
-                    <span>CoinMarket</span>
+                    <span>CoinMarketClone</span>
                 </div>
                 <ul class="nav-links">
                     <li id="nav-crypto" class="active">Cryptocurrencies</li>
                     <li id="nav-exchanges">Exchanges</li>
                     <li id="nav-community">Community</li>
-                    <li id="nav-portfolio">Portfolio</li>
-                    <li id="nav-alerts">Alerts</li>
+                    <li id="nav-products">Products</li>
                 </ul>
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -99,12 +101,23 @@
                 </div>
             </section>
 
+            <section class="narrative-pills">
+                <button class="pill-btn"><i class="fa-solid fa-fire"></i> Which sectors led market volumes?</button>
+                <button class="pill-btn"><i class="fa-solid fa-chart-line"></i> Why is the market up today?</button>
+                <button class="pill-btn"><i class="fa-solid fa-shuffle"></i> Are altcoins outperforming Bitcoin?</button>
+                <button class="pill-btn"><i class="fa-solid fa-comment-dots"></i> What are the trending narratives?</button>
+                <button class="pill-btn"><i class="fa-solid fa-arrow-trend-up"></i> What cryptos are showing bullish momentum?</button>
+            </section>
+
             <section class="table-container">
                 <div class="table-header">
                     <div class="tabs" id="crypto-tabs">
                         <button class="tab-btn active" data-tab="top">Top</button>
                         <button class="tab-btn" data-tab="trending">Trending</button>
                         <button class="tab-btn" data-tab="new">New</button>
+                    </div>
+                    <div class="filters">
+                        <button class="filter-btn"><i class="fa-solid fa-filter"></i> Filters</button>
                     </div>
                 </div>
                 <table id="crypto-table">
@@ -120,7 +133,9 @@
                             <th>Circulating Supply</th>
                         </tr>
                     </thead>
-                    <tbody id="crypto-body"></tbody>
+                    <tbody id="crypto-body">
+                        <!-- Skeleton loader will be inserted here -->
+                    </tbody>
                 </table>
             </section>
         </div>
@@ -151,17 +166,19 @@
                     <div class="post-box">
                         <div class="post-box-header">
                             <img src="https://avatar.vercel.sh/user" class="avatar" alt="User">
-                            <textarea id="community-textarea" placeholder="What is happening in the market?"></textarea>
+                            <textarea placeholder="What is happening in the market?"></textarea>
                         </div>
                         <div class="post-box-footer">
                             <div class="sentiment-btns">
-                                <button class="bull-btn" data-sentiment="bullish"><i class="fa-solid fa-arrow-trend-up"></i> Bullish</button>
-                                <button class="bear-btn" data-sentiment="bearish"><i class="fa-solid fa-arrow-trend-down"></i> Bearish</button>
+                                <button class="bull-btn"><i class="fa-solid fa-arrow-trend-up"></i> Bullish</button>
+                                <button class="bear-btn"><i class="fa-solid fa-arrow-trend-down"></i> Bearish</button>
                             </div>
-                            <button class="post-btn" id="post-community-btn">Post</button>
+                            <button class="post-btn">Post</button>
                         </div>
                     </div>
-                    <div id="community-feed"></div>
+                    <div id="community-feed">
+                        <!-- Posts chèn bởi JS -->
+                    </div>
                 </div>
                 <div class="community-sidebar">
                     <h3>Trending Topics</h3>
@@ -175,78 +192,16 @@
             </div>
         </div>
 
-        <!-- Portfolio View -->
-        <div id="view-portfolio" class="hidden">
-            <h1 class="view-title">My Portfolio</h1>
-            <section class="portfolio-container">
-                <div class="portfolio-stats">
-                    <div class="stat-box">
-                        <span class="stat-label">Total Value</span>
-                        <span class="stat-value" id="portfolio-total">$0.00</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">Total Change 24h</span>
-                        <span class="stat-value" id="portfolio-change">0%</span>
-                    </div>
-                </div>
-                <div class="add-portfolio">
-                    <h3>Add Cryptocurrency to Portfolio</h3>
-                    <div class="portfolio-form">
-                        <input type="text" id="portfolio-coin-name" placeholder="Coin name (e.g., Bitcoin)">
-                        <input type="number" id="portfolio-quantity" placeholder="Quantity" min="0" step="0.00000001">
-                        <button class="post-btn" id="add-portfolio-btn">Add to Portfolio</button>
-                    </div>
-                </div>
-                <table id="portfolio-table">
-                    <thead>
-                        <tr>
-                            <th>Coin</th>
-                            <th>Quantity</th>
-                            <th>Current Price</th>
-                            <th>Total Value</th>
-                            <th>Change 24h</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="portfolio-body"></tbody>
-                </table>
-            </section>
-        </div>
-
-        <!-- Alerts View -->
-        <div id="view-alerts" class="hidden">
-            <h1 class="view-title">Price Alerts</h1>
-            <section class="alerts-container">
-                <div class="add-alert">
-                    <h3>Set Price Alert</h3>
-                    <div class="alert-form">
-                        <input type="text" id="alert-coin" placeholder="Coin name">
-                        <input type="number" id="alert-price" placeholder="Alert price (USD)" min="0" step="0.01">
-                        <select id="alert-type">
-                            <option value="above">Alert when price goes above</option>
-                            <option value="below">Alert when price goes below</option>
-                        </select>
-                        <button class="post-btn" id="add-alert-btn">Set Alert</button>
-                    </div>
-                </div>
-                <table id="alerts-table">
-                    <thead>
-                        <tr>
-                            <th>Coin</th>
-                            <th>Alert Price</th>
-                            <th>Type</th>
-                            <th>Current Price</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="alerts-body"></tbody>
-                </table>
-            </section>
+        <!-- News / Products View -->
+        <div id="view-news" class="hidden">
+            <h1 class="view-title">Crypto News</h1>
+            <div id="news-grid" class="news-grid">
+                <!-- News chèn bởi JS -->
+            </div>
         </div>
     </main>
 
-    <!-- Auth Modals -->
+    <!-- added Auth Modals -->
     <div class="modal-overlay hidden" id="modal-overlay">
         <div class="modal-content">
             <button class="close-modal" id="close-modal">&times;</button>
